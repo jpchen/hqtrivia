@@ -2,6 +2,7 @@
 from detect_text import parse_screenshot, IMAGE_PATH
 from google_search import run_query_all
 from utils import logit
+import os
 import time
 
 START_FULL = time.time()
@@ -13,8 +14,15 @@ def main():
 
     # END_QUERY_ALL = time.time()
     # logit("QUERY ALL", START_QUERY_ALL, END_QUERY_ALL)
+    # TODO: handle negative questions
+    max_score = 0
+    best_answer = 'Dont know'
     for (answer, total) in results:
+        max_score = total if total > max_score else max_score
+        best_answer = answer if total > max_score else best_answer
         print("answer: {} === TOTAL: {}".format(answer, total))
+    # read aloud the most likely answer
+    os.system('say {}'.format(best_answer))
 
 if __name__ == '__main__':
     main()

@@ -1,6 +1,8 @@
 HQ Trivia Hack
 ===============
 
+**Use at your own risk**.
+
 Inspired by [this medium post](https://hackernoon.com/i-hacked-hq-trivia-but-heres-how-they-can-stop-me-68750ed16365) but uses Pillow for screenshotting and Google Vision API for OCR parsing instead.
 
 Usage:
