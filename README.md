@@ -1,27 +1,25 @@
 HQ Trivia Hack
 ===============
 
-**Use at your own risk**.
+**This is for recreational use. Using it in a cash game may be against HQ Trivia's TOS. Use at your own risk**.
 
 Inspired by [this medium post](https://hackernoon.com/i-hacked-hq-trivia-but-heres-how-they-can-stop-me-68750ed16365) but uses Pillow for screenshotting and Google Vision API for OCR parsing instead.
 
-Usage:
-```
-workon venv 
-pip install -r requirements.txt
+## TODO:
+- android support
+- better filtering
 
-// download a credentials.json service credentials file from a Google Vision-enabled Cloud Platform project (see OCR section below)
-// then create config.json following config.json.sample
+## Usage:
+1. Download a credentials.json service credentials file from a Google Vision-enabled Cloud Platform project (see OCR section below),
+then create config.json following config.json.sample
 
-// connect iphone to Mac
-// position quicktime player at top left -> select New Movie Recording
-// open recording button dropdown -> switch Movie recording to iphone
+2. connect iphone to Mac
 
-// run the full script:
-// - will launch browser to google search of the question
-// - in terminal, prints out the search results count for each q+a search (usually, take the  one with largest count)
-python main.py
-```
+3. position quicktime player at top left -> select New Movie Recording
+
+4. open recording button dropdown -> switch Movie recording to iphone
+
+5. `python main.py`
 
 ### 1 - Grab screenshot
 
@@ -59,8 +57,3 @@ Compare the total num results for each answer:
 answer: Oklahoma === TOTAL: 1,180,000
 answer: North Dakota === TOTAL: 1,360,000
 answer: Alaska === TOTAL: 1,330,000
-```
-
-Notes:
-- if the question is a "not" question ("which of these is NOT...") take the one with the lowest count
-- it's not unusual for the answer to be the second largest
