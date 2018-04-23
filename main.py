@@ -15,15 +15,18 @@ def main():
     # END_QUERY_ALL = time.time()
     # logit("QUERY ALL", START_QUERY_ALL, END_QUERY_ALL)
     negative_q = True if 'not' in question.lower() else False
-    max_score = 0
+    max_score = 1e12 if negative_q else 0
     best_answer = 'Dont know'
     for (answer, total) in results:
+        score = int(total.replace(',', ''))
         if negative_q:
-            max_score = total if total < max_score else max_score
-            best_answer = answer if total < max_score else best_answer
+            if max_score > score:
+                max_score = score
+                best_answer = answer
         else:
-            max_score = total if total > max_score else max_score
-            best_answer = answer if total > max_score else best_answer
+            if max_score < score:
+                max_score = score
+                best_answer = answer
         print("answer: {} === TOTAL: {}".format(answer, total))
     # read aloud the most likely answer
     os.system('say "{} is the most likely answer"'.format(best_answer))
