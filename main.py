@@ -1,4 +1,3 @@
-# will take screenshot => output/screenshot.png
 from detect_text import parse_screenshot
 from google_search import run_query_all
 from event import ParseSearchHandler

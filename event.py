@@ -4,12 +4,12 @@ from utils import logit
 import os
 import glob
 import time
-from watchdog.events import LoggingEventHandler
+from watchdog.events import FileSystemEventHandler
 
 
-class ParseSearchHandler(LoggingEventHandler):
+class ParseSearchHandler(FileSystemEventHandler):
 
-    def dispatch(self, event):
+    def on_created(self, event):
         # by default, mac saves ss on desktop
         all_img = glob.glob('/Users/jpchen/Desktop/*.png')
         # get the last ss
