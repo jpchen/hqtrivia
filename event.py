@@ -20,7 +20,7 @@ class ParseSearchHandler(FileSystemEventHandler):
 
         # END_QUERY_ALL = time.time()
         # logit("QUERY ALL", START_QUERY_ALL, END_QUERY_ALL)
-        negative_q = True if 'not' in question.lower() else False
+        negative_q = True if ' not ' in question.lower() else False
         max_score = 1e12 if negative_q else 0
         best_answer = 'Dont know'
         for (answer, total) in results:
