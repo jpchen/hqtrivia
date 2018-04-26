@@ -3,61 +3,36 @@ HQ Trivia Hack
 
 **This is for recreational use. Using it in a cash game may be against HQ Trivia's TOS. Use at your own risk**.
 
-Inspired by [this medium post](https://hackernoon.com/i-hacked-hq-trivia-but-heres-how-they-can-stop-me-68750ed16365) but uses Pillow for screenshotting and Google Vision API for OCR parsing instead.
-
-## TODO:
-- android support
-- screenshot grabbing locally
-- better filtering
+[**Demo**](TODO:youtubelink)
 
 ## Usage:
-1. Download a credentials.json service credentials file from a Google Vision-enabled Cloud Platform project (see OCR section below),
-then create config.json following config.json.sample
+1. connect iphone to mac -> Quicktime New Movie Recording
 
-2. connect iphone to Mac
+1. for android, use a screen capture app to cast android on mac
 
-3. position quicktime player at top left -> select New Movie Recording
+2. `python main.py`
 
-4. open recording button dropdown -> switch Movie recording to iphone
+3. $$$
 
-5. `python main.py`
 
-### 1 - Grab screenshot
+## Control flow
 
-USAGE: `from screengrab import screenshot`
+- program runs a process to check for screen captures.
+- on a screen capture event, the screen shot is processed and Google cloud vision is used to do OCR and process the text.
+- text is pruned and searched through a custom Google search engine in 'question + result' format
+- results are processed, displayed, and the answer with the highest # hits is read aloud to the user.
 
-- Quicktime player must be positioned at top left of screen, on iPhone recording
-- Uses PILLOW imagegrab - bounding box grabs only question + the multiple choice answers
-- this is super flaky atm
-
-### 2 - OCR detect text
-
-USAGE: `from detect_text import parse_screenshot`
-
-- Processes screenshot into question + answers
-- Launches browser to google search of the question
-
-This uses Google Cloud Vision so add credentials of the service account json file `config.json` as `CREDENTIALS_PATH`.
-
-`py detect_text.py` returns a dict:
+### Example
+![sample](img/sample.png)
 ```
-{
-    question: 'After Texas , what U . S . state produces the most crude oil ?'
-    answers: ['Oklahoma', 'North Dakota', 'Alaska']
-}
-```
-### 3 - Using Google Custom search, run three custom searches with question + answer.
-
-USAGE: `from google_search import run_query_all`
-
-https://developers.google.com/custom-search/json-api/v1/overview
-
-Compare the total num results for each answer and read aloud the most probable answer:
-```
-answer: Oklahoma === TOTAL: 1,180,000
-answer: North Dakota === TOTAL: 1,360,000
-answer: Alaska === TOTAL: 1,330,000
+Q: What food item is traditionally thrown following a wedding ceremony ?
+Rice === SCORE: 9,410,000
+Sushi === SCORE: 1,690,000
+Potatoes === SCORE: 5,000,000
+ANSWER: Rice
 ```
 
 ## Acknowledgements 
 Forked from [lishiyo](https://github.com/lishiyo/hqtrivia)
+
+Inspired by [this medium post](https://hackernoon.com/i-hacked-hq-trivia-but-heres-how-they-can-stop-me-68750ed16365)
