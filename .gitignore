@@ -1,4 +1,3 @@
-check.png
 test/
 demos/
 credentials.json
@@ -7,3 +6,8 @@ hqtrivia-key.json
 output/*
 *.pyc
 __pycache__
+.DS_Store
+*.swp
+*.secret
+.gitsecret
+.vscode
