@@ -3,7 +3,7 @@ HQ Trivia Hack
 
 **This is for recreational use. Using it in a cash game may be against HQ Trivia's TOS. Use at your own risk**.
 
-[**Demo**](TODO:youtubelink)
+[**Demo**](https://youtu.be/R0096uOYFCQ)
 
 ## Usage:
 1. connect iphone to mac -> Quicktime New Movie Recording
