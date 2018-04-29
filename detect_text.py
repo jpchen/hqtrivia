@@ -21,13 +21,12 @@ from google.cloud.vision import types
 
 # The name of the image file to annotate
 from screengrab import screenshot
-from utils import logit
 
 # List of words to clean from the question during google search
 WORDS_TO_STRIP = [
     'who', 'what', 'where', 'when', 'of', 'and', 'that', 'have', 'for',
     'on', 'with', 'as', 'this', 'by', 'from', 'they', 'a', 'an', 'and', 'my',
-    'in', 'to', '?', ',', 'these'
+    'did', 'do', 'in', 'to', '?', ',', 'these'
 ]
 
 # Instantiates a Google Vision client with explicit creds
@@ -37,8 +36,7 @@ def parse_screenshot(path, should_launch=True):
     # 2. Parse for the block texts
     texts_and_bounds = detect_text_with_bounds(path)
     # 3. Parse into questions and answers
-    questions_and_answers = get_questions_and_answers(*texts_and_bounds, should_launch=True)
-    # print("{}".format(questions_and_answers))
+    questions_and_answers = get_questions_and_answers(*texts_and_bounds, should_launch=should_launch)
     return questions_and_answers
 
 def take_screenshot(path):
@@ -49,29 +47,27 @@ def get_questions_and_answers(block_texts, block_bounds, should_launch=True):
     - return a dict with `question` and array of `answers` (attempt to get 3)
     - launches the question in web browser
     """
-    question = block_texts[0]
-
-    # launch in browser as soon as we have the question
+    # launch in browser cause until we solve AI you need a human for some of these things
     if (should_launch):
-        launch_web(question)
+        launch_web(block_texts[0])
 
-    answers = []
-    answerIndex = 1 # should only ever be 3 answers (indices 1-3)
-    while (answerIndex <= 3 and answerIndex < len(block_texts)):
-        answers.append(block_texts[answerIndex])
-        answerIndex += 1
+    print('Q: ' + block_texts[0])
+    question = prune_question(block_texts.pop(0))
 
-    # print out answers for debugging
-    for i, text in enumerate(answers):
-            print("{}: {}".format(i, text))
+    # cash show puts extra text for cash questions
+    if('Prize for this question' in block_texts[0]):
+        del block_texts[0]
 
-    return {'question': question, 'answers': answers}
+    return {'question': question, 'answers': block_texts}
 
-# launch with clean question
-def launch_web(original_question):
-    words = original_question.split()
+def prune_question(question):
+    words = question.split()
     words = [word for word in words if word.lower() not in WORDS_TO_STRIP]
-    url = "https://www.google.com.tr/search?q={}".format(' '.join(words))
+    pruned_question = " ".join(words)
+    return pruned_question
+
+def launch_web(question):
+    url = "https://www.google.com.tr/search?q={}".format(question)
     webbrowser.open_new_tab(url)
 
 def detect_text_with_bounds(path):
@@ -87,9 +83,6 @@ def detect_text_with_bounds(path):
     response = client.document_text_detection(image=image)
     document = response.full_text_annotation
 
-    # END_DOC_OCR = time.time()
-    # logit("DOC OCR", START_DOC_OCR, END_DOC_OCR)
-
     block_bounds = []
     block_texts = []
     # Collect specified feature bounds by enumerating all document features
@@ -97,15 +90,10 @@ def detect_text_with_bounds(path):
         for block in page.blocks:
             block_words = []
             for paragraph in block.paragraphs:
-                # print("paragraph words length: {}".format(len(paragraph.words)))
                 block_words.extend(paragraph.words)
-
-            # print("block words length: {}".format(len(block_words)))
             block_words_mapped = list(map(map_words, block_words))
 
             block_text = ' '.join(block_words_mapped)
-            # print('Block Content: {}'.format(block_text))
-            # print('Block Bounds:\n {}'.format(block.bounding_box))
             block_texts.append(block_text)
             block_bounds.append(block.bounding_box)
 

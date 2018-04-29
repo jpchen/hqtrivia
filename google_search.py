@@ -1,5 +1,5 @@
-import pprint
 from googleapiclient.discovery import build
+import time
 
 # load config
 import json
@@ -11,9 +11,10 @@ CUSTOM_SEARCH_ENGINE_ID = data["GOOGLE"]["CUSTOM_SEARCH_ENGINE_ID"]
 
 def run_query_all(question, answers):
     """
-    Returns array of tuples with the query and total num of search results for it 
+    Returns array of tuples with the query and total num of search results for it
     """
     results = []
+
     for answer in answers:
         if (answer.startswith('"')):
             query = question + " " + answer
@@ -29,6 +30,3 @@ def search(query):
         cx=CUSTOM_SEARCH_ENGINE_ID,
     ).execute()
     return res['searchInformation']['formattedTotalResults']
-
-if __name__ == '__main__':
-    search('lectures')
