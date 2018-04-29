@@ -2,6 +2,7 @@ import time
 import io
 import os
 import webbrowser
+from profilehooks import profile
 
 # load config
 import json
@@ -32,6 +33,7 @@ WORDS_TO_STRIP = [
 # Instantiates a Google Vision client with explicit creds
 client = vision.ImageAnnotatorClient(credentials=scoped_credentials)
 
+@profile
 def parse_screenshot(path, should_launch=True):
     # 2. Parse for the block texts
     texts_and_bounds = detect_text_with_bounds(path)

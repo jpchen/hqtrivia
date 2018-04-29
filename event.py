@@ -4,18 +4,22 @@ import os
 import glob
 import time
 from watchdog.events import FileSystemEventHandler
+from profilehooks import profile
 
 
 class ParseSearchHandler(FileSystemEventHandler):
 
     def on_created(self, event):
+        print("WE HERE")
         start = time.time()
         # by default, mac saves ss on desktop
         all_img = glob.glob('/Users/jpchen/Desktop/*.png')
         # get the last ss
         latest_img = max(all_img, key=os.path.getctime)
         q_and_a = parse_screenshot(latest_img, should_launch=True)
+        print("PARSED", time.time() - start)
         (question, results) = run_query_all(q_and_a['question'], q_and_a['answers'])
+        print("QUERIED")
 
         negative_q = ' not ' in question.lower()
         max_score = 1e12 if negative_q else 0
