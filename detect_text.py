@@ -33,7 +33,6 @@ WORDS_TO_STRIP = [
 # Instantiates a Google Vision client with explicit creds
 client = vision.ImageAnnotatorClient(credentials=scoped_credentials)
 
-@profile
 def parse_screenshot(path, should_launch=True):
     # 2. Parse for the block texts
     texts_and_bounds = detect_text_with_bounds(path)
@@ -72,17 +71,19 @@ def launch_web(question):
     url = "https://www.google.com.tr/search?q={}".format(question)
     webbrowser.open_new_tab(url)
 
+@profile
 def detect_text_with_bounds(path):
     """
     Detects text in the file with bounds.
     Returns a tuple of the block texts and block bounds
+    This is slow and inconsistent AF:
+    https://github.com/GoogleCloudPlatform/google-cloud-python/issues/5261
     """
-    # START_DOC_OCR = time.time()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
     image = types.Image(content=content)
-    response = client.document_text_detection(image=image)
+    response = client.document_text_detection(image=image) # <-- this line is the bottleneck
     document = response.full_text_annotation
 
     block_bounds = []
