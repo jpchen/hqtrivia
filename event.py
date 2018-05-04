@@ -17,7 +17,7 @@ class ParseSearchHandler(FileSystemEventHandler):
         q_and_a = parse_screenshot(latest_img, should_launch=True)
         (question, results) = run_query_all(q_and_a['question'], q_and_a['answers'])
 
-        negative_q = ' not ' in question.lower()
+        negative_q = ' not ' in question.lower() or "isn ' t " in question.lower()
         max_score = 1e12 if negative_q else 0
         best_answer = None
         total_score = 0
