@@ -2,6 +2,7 @@ import time
 import io
 import os
 import webbrowser
+from PIL import Image
 
 # load config
 import json
@@ -33,7 +34,10 @@ WORDS_TO_STRIP = [
 client = vision.ImageAnnotatorClient(credentials=scoped_credentials)
 
 def compress(path):
-    pass
+    img = Image.open(path)
+    img.thumbnail((285, 300), Image.ANTIALIAS)
+    img.save('out_img.png', "PNG")
+    return 'out_img.png'
 
 def parse_screenshot(path, should_launch=True):
     # 2. Parse for the block texts
