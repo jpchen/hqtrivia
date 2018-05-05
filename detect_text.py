@@ -35,21 +35,21 @@ client = vision.ImageAnnotatorClient(credentials=scoped_credentials)
 
 def compress(path):
     img = Image.open(path)
-    img.thumbnail((285, 300), Image.ANTIALIAS)
+    img.thumbnail((428, 450), Image.ANTIALIAS)
     img.save('out_img.png', "PNG")
     return 'out_img.png'
 
-def parse_screenshot(path, should_launch=True):
+def parse_screenshot(path, should_launch=True, compressed=False):
     # 2. Parse for the block texts
     texts_and_bounds = detect_text_with_bounds(path)
     # 3. Parse into questions and answers
-    questions_and_answers = get_questions_and_answers(*texts_and_bounds, should_launch=should_launch)
+    questions_and_answers = get_questions_and_answers(*texts_and_bounds, should_launch=should_launch, compressed=compressed)
     return questions_and_answers
 
 def take_screenshot(path):
     screenshot(path)
 
-def get_questions_and_answers(block_texts, block_bounds, should_launch=True):
+def get_questions_and_answers(block_texts, block_bounds, should_launch=True, compressed=False):
     """
     - return a dict with `question` and array of `answers` (attempt to get 3)
     - launches the question in web browser
@@ -62,6 +62,8 @@ def get_questions_and_answers(block_texts, block_bounds, should_launch=True):
     question = prune_question(block_texts.pop(0))
 
     # cash show puts extra text for cash questions
+    if compressed and len(block_texts) > 3:
+        del block_texts[0]
     if('Prize for this question' in block_texts[0]):
         del block_texts[0]
 

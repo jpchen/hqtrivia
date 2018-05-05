@@ -5,6 +5,7 @@ import glob
 import time
 from watchdog.events import FileSystemEventHandler
 
+compressed = True
 
 class ParseSearchHandler(FileSystemEventHandler):
 
@@ -13,10 +14,11 @@ class ParseSearchHandler(FileSystemEventHandler):
         # by default, mac saves ss on desktop
         all_img = glob.glob('/Users/jpchen/Desktop/*.png')
         # get the last ss
-        latest_img = compress(max(all_img, key=os.path.getctime))
-        q_and_a = parse_screenshot(latest_img, should_launch=True)
+        latest_img = max(all_img, key=os.path.getctime)
+        if compressed:
+            latest_img = compress(latest_img)
+        q_and_a = parse_screenshot(latest_img, should_launch=True, compressed=compressed)
         (question, results) = run_query_all(q_and_a['question'], q_and_a['answers'])
-
         negative_q = ' not ' in question.lower() or "isn ' t " in question.lower()
         max_score = 1e12 if negative_q else 0
         best_answer = None
