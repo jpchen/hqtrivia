@@ -35,7 +35,7 @@ client = vision.ImageAnnotatorClient(credentials=scoped_credentials)
 
 def compress(path):
     img = Image.open(path)
-    img.thumbnail((428, 450), Image.ANTIALIAS)
+    img.thumbnail((285, 300), Image.ANTIALIAS)
     img.save('out_img.png', "PNG")
     return 'out_img.png'
 
