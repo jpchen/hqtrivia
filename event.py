@@ -1,4 +1,4 @@
-from detect_text import parse_screenshot
+from detect_text import parse_screenshot, compress
 from google_search import run_query_all
 import os
 import glob
@@ -13,7 +13,7 @@ class ParseSearchHandler(FileSystemEventHandler):
         # by default, mac saves ss on desktop
         all_img = glob.glob('/Users/jpchen/Desktop/*.png')
         # get the last ss
-        latest_img = max(all_img, key=os.path.getctime)
+        latest_img = compress(max(all_img, key=os.path.getctime))
         q_and_a = parse_screenshot(latest_img, should_launch=True)
         (question, results) = run_query_all(q_and_a['question'], q_and_a['answers'])
 
