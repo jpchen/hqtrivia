@@ -17,8 +17,11 @@ class ParseSearchHandler(FileSystemEventHandler):
         latest_img = max(all_img, key=os.path.getctime)
         if compressed:
             latest_img = compress(latest_img)
-        q_and_a = parse_screenshot(latest_img, should_launch=True, compressed=compressed)
-        (question, results) = run_query_all(q_and_a['question'], q_and_a['answers'])
+        try:
+            q_and_a = parse_screenshot(latest_img, should_launch=True, compressed=compressed)
+            (question, results) = run_query_all(q_and_a['question'], q_and_a['answers'])
+        except:
+            pass
         negative_q = ' not ' in question.lower() or "isn ' t " in question.lower()
         max_score = 1e12 if negative_q else 0
         best_answer = None
