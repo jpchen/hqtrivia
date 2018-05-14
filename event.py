@@ -22,7 +22,7 @@ class ParseSearchHandler(FileSystemEventHandler):
             (question, results) = run_query_all(q_and_a['question'], q_and_a['answers'])
         except:
             pass
-        negative_q = ' not ' in question.lower() or "isn ' t " in question.lower()
+        negative_q = ' not ' in question.lower() or "isn ' t " in question.lower() or ' never ' in question.lower()
         max_score = 1e12 if negative_q else 0
         best_answer = None
         total_score = 0
@@ -39,7 +39,7 @@ class ParseSearchHandler(FileSystemEventHandler):
                     best_answer = answer
             print("{} === SCORE: {}".format(answer, total))
         end = time.time()
-        if best_answer:
+        try:
             # read aloud the most likely answer
             confidence = max_score / total_score * 100
             if negative_q:
@@ -47,6 +47,6 @@ class ParseSearchHandler(FileSystemEventHandler):
             os.system('say "{} is the most likely answer at {:.1f} percent confidence"'.format(best_answer, confidence))
             print("ANSWER: {} -- {} %".format(best_answer, confidence))
             print('Elapsed wall time: {} seconds', end - start)
-        else:
+        except:
             # something went wrong
             os.system('say fuck if i know')
