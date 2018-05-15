@@ -56,9 +56,10 @@ def get_questions_and_answers(block_texts, block_bounds, should_launch=True, com
     """
     # launch in browser cause until we solve AI you need a human for some of these things
     if (should_launch):
-        launch_web(block_texts[0])
+        # handle apostrophes
+        launch_web(block_texts[0].replace(' \' s', '\'s'))
 
-    print('Q: ' + block_texts[0])
+    print('Q: ' + block_texts[0].replace(' \' s', '\'s'))
     question = prune_question(block_texts.pop(0))
 
     # cash show puts extra text for cash questions
