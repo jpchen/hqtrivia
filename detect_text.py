@@ -55,11 +55,12 @@ def get_questions_and_answers(block_texts, block_bounds, should_launch=True, com
     - launches the question in web browser
     """
     # launch in browser cause until we solve AI you need a human for some of these things
+    pre_url_encode = block_texts[0].replace(' \' s', '\'s').replace('"', '\'')
     if (should_launch):
         # handle apostrophes
-        launch_web(block_texts[0].replace(' \' s', '\'s'))
+        launch_web(pre_url_encode)
 
-    print('Q: ' + block_texts[0].replace(' \' s', '\'s'))
+    print('Q: ' + pre_url_encode)
     question = prune_question(block_texts.pop(0))
 
     # cash show puts extra text for cash questions
