@@ -17,35 +17,20 @@ class ParseSearchHandler(FileSystemEventHandler):
         latest_img = max(all_img, key=os.path.getctime)
         if compressed:
             latest_img = compress(latest_img)
+        negative_q = ' not ' in question.lower() or "isn ' t " in question.lower() or ' never ' in question.lower()
         try:
             q_and_a = parse_screenshot(latest_img, should_launch=True, compressed=compressed)
-            (question, results) = run_query_all(q_and_a['question'], q_and_a['answers'])
+            (question, results) = run_query_all(q_and_a['question'], q_and_a['answers'], is_negative=negative_q)
         except:
             pass
-        negative_q = ' not ' in question.lower() or "isn ' t " in question.lower() or ' never ' in question.lower()
-        max_score = 1e12 if negative_q else 0
-        best_answer = None
-        total_score = 0
-        for (answer, total) in results:
-            score = int(total.replace(',', ''))
-            total_score += score
-            if negative_q:
-                if max_score > score:
-                    max_score = score
-                    best_answer = answer
-            else:
-                if max_score < score:
-                    max_score = score
-                    best_answer = answer
-            print("{} === SCORE: {}".format(answer, total))
         end = time.time()
         try:
             # read aloud the most likely answer
-            confidence = max_score / total_score * 100
-            if negative_q:
-                confidence = 100 - confidence
-            os.system('say "{} is the most likely answer at {:.1f} percent confidence"'.format(best_answer, confidence))
-            print("ANSWER: {} -- {} %".format(best_answer, confidence))
+#             confidence = max_score / total_score * 100
+#             if negative_q:
+#                 confidence = 100 - confidence
+            os.system('say "{} is the most likely answer."'.format(best_answer))
+            print("ANSWER: {} -- {} %".format(best_answer))
             print('Elapsed wall time: {} seconds', end - start)
         except:
             # something went wrong
