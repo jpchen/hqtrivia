@@ -26,8 +26,8 @@ class ParseSearchHandler(FileSystemEventHandler):
             pass
         end = time.time()
         try:
+            # read aloud the answer
             os.system('say "{} is the most likely answer."'.format(answer))
-            print('ANSWER: ' + '\033[92m' + answer + '\033[0m')
             print('Elapsed wall time: {} seconds', end - start)
         except:
             # something went wrong

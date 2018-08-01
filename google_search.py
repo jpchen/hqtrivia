@@ -16,16 +16,17 @@ def run_query_all(question, answers, is_negative=False):
     - num of hits on a google search with the answer
     :param str question: question
     :param list answers: answers
-    :return: tuple with (question, results)
+    :return: answer with the highest score
+    :rtype: str
     """
     max_count = -999
     min_count = 999
-    if 'which' in question.lower():
+    if 'which' not in question.lower():
         # answers that appear ibe webpage the most
         result_counts = []
         output = search(question)['items']
         total_hits = 0
-        for answer in answers:, has_which=False
+        for answer in answers:
             count = 0
             for result in output:
                 count += result['title'].lower().count(answer.lower())
@@ -40,8 +41,11 @@ def run_query_all(question, answers, is_negative=False):
                     max_count = count
                     best_ans = answer
             result_counts.append((answer, count))
-        for answer, result in results:
-            print(answer + ':  ' + result)
+        for answer, result in result_counts:
+            if answer == best_ans:
+                print('\033[92m' + answer + ':  ' + str(result) + '\033[0m')
+            else:
+                print(answer + ':  ' + str(result))
         return best_ans
     else:
         # answers with the most results
@@ -63,7 +67,10 @@ def run_query_all(question, answers, is_negative=False):
                     best_ans = answer
             results.append((answer, result))
         for answer, result in results:
-            print(answer + ':  ' + result)
+            if answer == best_ans:
+                print('\033[92m' + answer + ':  ' + result + '\033[0m')
+            else:
+                print(answer + ':  ' + result)
         return best_ans
 
 def search(query):
