@@ -1,4 +1,5 @@
 from googleapiclient.discovery import build
+from detect_text import prune_question
 import time
 
 # load config
@@ -50,6 +51,8 @@ def run_query_all(question, answers, is_negative=False):
     else:
         # answers with the most results
         results = []
+        question = question.lower().replace('which of the following', '')
+        question = prune_question(question)
         for answer in answers:
             if (answer.startswith('"')):
                 query = question + " " + answer

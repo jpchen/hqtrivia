@@ -27,7 +27,7 @@ from screengrab import screenshot
 WORDS_TO_STRIP = [
     'who', 'what', 'where', 'when', 'of', 'and', 'that', 'have', 'for',
     'on', 'with', 'as', 'this', 'by', 'from', 'they', 'a', 'an', 'and', 'my',
-    'did', 'do', 'in', 'to', '?', ',', 'these'
+    'did', 'do', 'in', 'to', '?', ',', 'these', 'the'
 ]
 
 # Instantiates a Google Vision client with explicit creds
@@ -61,7 +61,7 @@ def get_questions_and_answers(block_texts, block_bounds, should_launch=True, com
         launch_web(pre_url_encode)
 
     print('Q: ' + pre_url_encode)
-    question = prune_question(block_texts.pop(0))
+    question = block_texts.pop(0)
 
     # cash show puts extra text for cash questions
     if compressed and len(block_texts) > 3:
