@@ -42,39 +42,42 @@ def run_query_all(question, answers, is_negative=False):
                     max_count = count
                     best_ans = answer
             result_counts.append((answer, count))
-        for answer, result in result_counts:
-            if answer == best_ans:
-                print('\033[92m' + answer + ':  ' + str(result) + '\033[0m')
-            else:
-                print(answer + ':  ' + str(result))
-        return best_ans
-    else:
-        # answers with the most results
-        results = []
-        question = question.lower().replace('which of the following', '')
-        question = prune_question(question)
-        for answer in answers:
-            if (answer.startswith('"')):
-                query = question + " " + answer
-            else:
-                query = question + ' "' + answer + '"'
-            result = search(query)['searchInformation']['formattedTotalResults']
-            score = int(result.replace(',', ''))
-            if is_negative:
-                if score < min_count:
-                    min_count = score
-                    best_ans = answer
-            else:
-                if score > max_count:
-                    max_count = score
-                    best_ans = answer
-            results.append((answer, result))
-        for answer, result in results:
-            if answer == best_ans:
-                print('\033[92m' + answer + ':  ' + result + '\033[0m')
-            else:
-                print(answer + ':  ' + result)
-        return best_ans
+        if total_hits > 0:
+            for answer, result in result_counts:
+                if answer == best_ans:
+                    print('\033[92m' + answer + ':  ' + str(result) + '\033[0m')
+                else:
+                    print(answer + ':  ' + str(result))
+            return best_ans
+
+    # answers with the most results
+    max_count = -999
+    min_count = 999
+    results = []
+    question = question.lower().replace('which of the following', '')
+    question = prune_question(question)
+    for answer in answers:
+        if (answer.startswith('"')):
+            query = question + " " + answer
+        else:
+            query = question + ' "' + answer + '"'
+        result = search(query)['searchInformation']['formattedTotalResults']
+        score = int(result.replace(',', ''))
+        if is_negative:
+            if score < min_count:
+                min_count = score
+                best_ans = answer
+        else:
+            if score > max_count:
+                max_count = score
+                best_ans = answer
+        results.append((answer, result))
+    for answer, result in results:
+        if answer == best_ans:
+            print('\033[92m' + answer + ':  ' + result + '\033[0m')
+        else:
+            print(answer + ':  ' + result)
+    return best_ans
 
 def search(query):
     service = build("customsearch", "v1", developerKey=CUSTOM_SEARCH_API_KEY)
